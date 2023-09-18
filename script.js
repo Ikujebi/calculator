@@ -96,49 +96,27 @@ cancel.addEventListener("click",cancelAll)
 const add = (a,b)=> a+b
 
     console.log(inp.innerHTML.indexOf("5"));
-calculate.addEventListener("click", ()=>{
-    let indexOfPercent = inp.innerHTML.indexOf("%")
-    let indexOfX = inp.innerHTML.indexOf("x")
-    let posAfterPercent = (inp.innerHTML.indexOf("x")+1)
+    calculate.addEventListener("click", () => {
+        const input = inp.innerHTML;
+        
+        // Replace "x" with "*" for multiplication
+        const cleanedInput = input.replace(/x/g, '*');
     
-    let numBeforeMultiplication = (inp.innerHTML.slice(0,inp.innerHTML.indexOf("x")))
-    let numAfterMultiplication = inp.innerHTML.slice(posAfterPercent,inp.innerHTML.length)
-    if(inp.innerHTML.includes('x')){
-       
-        
-         if(inp.innerHTML.includes('%')){
-            if(indexOfX <indexOfPercent){
-           let evaluatedPercentNum = eval( (inp.innerHTML.slice(posAfterPercent,((inp.innerHTML.length) -1)) ) / 100 )
-             inp.innerHTML =  multiplication(numBeforeMultiplication,evaluatedPercentNum);
-            }else if (indexOfX >indexOfPercent) {
-                let secondEvaluatedPNum = eval((inp.innerHTML.slice(0,inp.innerHTML.indexOf("%"))) / 100)
-                let posAfterPercent2 = inp.innerHTML.slice((inp.innerHTML.indexOf("x") + 1),inp.innerHTML.length)
-                console.log(posAfterPercent2);
-                inp.innerHTML = multiplication(secondEvaluatedPNum,posAfterPercent2)
+        try {
+            // Evaluate the expression
+            const result = eval(cleanedInput);
+    
+            // Check if the result is a number (not NaN)
+            if (!isNaN(result)) {
+                inp.innerHTML = result;
+            } else {
+                inp.innerHTML = "Error";
             }
-         } else{
-                
-                inp.innerHTML = multiplication(inp.innerHTML.replace(/x/g,","))
-                console.log(inp);
-                console.log(inp.innerHTML.replace(/x/g,","));
-            console.log(multiplication(inp.innerHTML.replaceAll("x",",")));
-            /* inp.innerHTML =  multiplication(numBeforeMultiplication,
-            numAfterMultiplication); */
-         } 
-        
-     }else{
-        if(inp.innerHTML.includes('%')){
-            let indexOfPercent = inp.innerHTML.indexOf("%")
-            
-            console.log((inp.innerHTML.slice(0,indexOfPercent)));
-            console.log((inp.innerHTML.slice((indexOfPercent + 2),inp.innerHTML.lastIndexOf("x"))));
-              inp.innerHTML = eval((inp.innerHTML.slice(0,indexOfPercent)) +
-              (inp.innerHTML.slice((indexOfPercent + 1),inp.innerHTML.lastIndexOf("x")))) + "%"
-        }else{
-            inp.innerHTML =   eval(inp.innerHTML) 
+        } catch (error) {
+            inp.innerHTML = "Error";
         }
-        };
+    });
+    
           
      
      
-}) 

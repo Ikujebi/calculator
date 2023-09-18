@@ -1,22 +1,26 @@
-const inp = document.querySelector("#screen")
-const cancelAll = ()=>{
-    
+const inp = document.querySelector("#screen");
+
+const cancelAll = () => {
     console.log(inp);
-    inp.innerHTML = ``
-}
-const cancelOne = ()=>{
-    inp.innerHTML = inp.innerHTML.slice(0,-1)
-}
+    inp.innerHTML = ``;
+};
 
-const multiplication = (...variables)=>{
-    let output = 1;
-    for(let variable of variables){
-        
-        output *= variable
-        console.log(output);
+const cancelOne = () => {
+    inp.innerHTML = inp.innerHTML.slice(0, -1);
+};
+
+const multiplication = (...inputs) => {
+    // Check if the inputs contain arrays
+    const isArrays = inputs.some(Array.isArray);
+
+    if (isArrays) {
+        // Flatten the arrays and then multiply element-wise
+        const flattenedArray = inputs.reduce((acc, current) => acc.concat(current), []);
+        return flattenedArray.reduce((output, value) => output * value, 1);
+    } else {
+        // Perform regular multiplication for non-array inputs
+        return inputs.reduce((output, variable) => output * variable, 1);
     }
-   return output
-   }
+};
 
-export {cancelAll, cancelOne, multiplication}
-
+export { cancelAll, cancelOne, multiplication };
