@@ -98,61 +98,56 @@ const add = (a,b)=> a+b
     console.log(inp.innerHTML.indexOf("5"));
     
 
-calculate.addEventListener("click", () => {
+    calculate.addEventListener("click", () => {
         const input = inp.innerHTML;
     
         // Replace "x" with "*" for multiplication
         const cleanedInput = input.replace(/x/g, '*');
     
         try {
-            // Check if the input contains the percentage symbol "%"
-            if (cleanedInput.includes("%")) {
-                // Split the input by the percentage symbol "%"
-                const parts = cleanedInput.split("%");
+            // Use regular expressions to match and extract the parts of the expression
+            const match = cleanedInput.match(/([\d.]+%?)([+\-*/]?)([\d.]+%?)/);
     
-                // If there are two parts (number and "%"), calculate the percentage
-                if (parts.length === 2) {
-                    const number = parseFloat(parts[0]);
-                    if (!isNaN(number)) {
-                        const percentageValue = number / 100;
-                        console.log(percentageValue);
-                        const updatedInput = percentageValue  + parts[1];
-                    inp.innerHTML = eval(updatedInput);
-                        return;
+            if (match) {
+                const num1 = parseFloat(match[1]);
+                const operator = match[2];
+                const num2 = parseFloat(match[3]);
+    
+                if (!isNaN(num1) && !isNaN(num2)) {
+                    const percentage1 = match[1].includes("%") ? num1 / 100 : num1;
+                    const percentage2 = match[3].includes("%") ? num2 / 100 : num2;
+    
+                    let result;
+    
+                    switch (operator) {
+                        case '+':
+                            result = percentage1 + percentage2;
+                            break;
+                        case '-':
+                            result = percentage1 - percentage2;
+                            break;
+                        case '*':
+                            result = percentage1 * percentage2;
+                            break;
+                        case '/':
+                            result = percentage1 / percentage2;
+                            break;
+                        default:
+                            result = "Error";
+                            break;
                     }
-                }
-            } else if (cleanedInput.includes("x")) {
-                // Split the input by the "x" symbol
-                const parts = cleanedInput.split("x");
     
-                // If there are two parts (number and "x"), check if one is a percentage
-                if (parts.length === 2) {
-                    const num1 = parseFloat(parts[0]);
-                    const num2 = parseFloat(parts[1]);
-    
-                    // Check if either num1 or num2 is a percentage
-                    if (!isNaN(num1) && !isNaN(num2)) {
-                        if (parts[0].includes("%")) {
-                            const result = (num1 / 100) * num2;
-                            inp.innerHTML = result;
-                        } else if (parts[1].includes("%")) {
-                            const result = num1 * (num2 / 100);
-                            inp.innerHTML = result;
-                        } else {
-                            const result = num1 * num2;
-                            inp.innerHTML = result;
-                        }
-                        return;
-                    }
+                    inp.innerHTML = result;
+                    return;
                 }
             }
     
-            // If it's neither a percentage nor multiplication calculation, evaluate the expression as before
-            const result = eval(cleanedInput);
+            // If it's not a percentage calculation, evaluate the expression as before
+            const finalResult = eval(cleanedInput);
     
             // Check if the result is a number (not NaN)
-            if (!isNaN(result)) {
-                inp.innerHTML = result;
+            if (!isNaN(finalResult)) {
+                inp.innerHTML = finalResult;
             } else {
                 inp.innerHTML = "Error";
             }
